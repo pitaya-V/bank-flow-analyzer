@@ -2,6 +2,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using BankFlowAnalyzer.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BankFlowAnalyzer.ViewModels
 {
@@ -15,14 +17,17 @@ namespace BankFlowAnalyzer.ViewModels
         public TransactionsViewModel()
         {
             SearchCommand = new AsyncRelayCommand(OnSearchAsync);
-            // 示例：初始两行
-            Items.Add(new { tx_time = "2025-01-01 10:00:00", direction = "收入", amount = 1000, summary = "工资" });
-            Items.Add(new { tx_time = "2025-01-03 15:30:00", direction = "支出", amount = 200, summary = "超市" });
+            _ = OnSearchAsync();
         }
 
         private async Task OnSearchAsync()
         {
-            await Task.Delay(50);
+            var sp = BankFlowAnalyzer.App.HostContainer!.Services;
+            var svc = sp.GetRequiredService<IAnalysisService>();
+            await svc.SeedIfEmptyAsync();
+            var rows = await svc.PagedAsync(1, 200, Keyword);
+            Items.Clear();
+            foreach (var r in rows) Items.Add(r);
         }
     }
 }

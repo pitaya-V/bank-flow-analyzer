@@ -11,7 +11,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="月度收支趋势（示例数据）" FontWeight="Bold"/>
+        <TextBlock Text="月度收支趋势" FontWeight="Bold"/>
         <wpf:CartesianChart Grid.Row="1" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"/>
     </Grid>
 </UserControl>
